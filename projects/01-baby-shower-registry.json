@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "title": "Baby Shower Gift Registry Application",
+  "category": "backend",
+  "description": "A real-time gift registry system implementing CRUD functionality for gift management and reservation.",
+  "challenge": "Improving data consistency across concurrent user requests by applying state validation and controlled update logic.",
+  "outcome": "Integrated Firebase for persistent data storage and authentication, enabling reliable, concurrent backend state management.",
+  "tech": ["TypeScript", "Node.js", "Express", "Firebase", "API Architecture"],
+  "demoUrl": "#",
+  "codeUrl": "https://github.com/TortillaPy"
+}

@@ -1,0 +1,11 @@
+{
+  "id": 3,
+  "title": "Algorithmic Optimization & API Challenges",
+  "category": "backend",
+  "description": "Optimized complex array and string-processing challenges by applying advanced algorithmic patterns.",
+  "challenge": "Solving classic logic challenges such as Trapping Rain Water, targeting O(N) efficiency and minimal auxiliary space.",
+  "outcome": "Translated abstract constraints into clean, testable, and maintainable server-side logic using two-pointer techniques.",
+  "tech": ["TypeScript", "JavaScript ES6+", "Algorithms", "Data Structures", "Complexity Optimization"],
+  "demoUrl": "#",
+  "codeUrl": "https://github.com/TortillaPy"
+}

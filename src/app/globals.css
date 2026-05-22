@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  
+  /* Modern OKLCH color palettes (Red to White gradient) */
+  --color-brand-50: oklch(0.99 0 0);
+  --color-brand-100: oklch(0.93 0.08 30);
+  --color-brand-200: oklch(0.85 0.12 30);
+  --color-brand-500: oklch(0.65 0.20 30);
+  --color-brand-600: oklch(0.55 0.25 30);
+  --color-brand-700: oklch(0.45 0.28 30);
+  
+  --color-accent-500: oklch(0.60 0.25 30);
+  --color-accent-600: oklch(0.50 0.28 30);
+  
+  --color-bg-light: oklch(0.98 0.005 256);
+  --color-bg-dark: oklch(0.12 0.015 256);
+  
+  --color-card-light: rgba(255, 255, 255, 0.45);
+  --color-card-dark: rgba(15, 23, 42, 0.45);
+}
+
+:root {
+  --background: oklch(0.98 0.005 256);
+  --foreground: oklch(0.25 0.01 256);
+  --accent-glow: oklch(0.68 0.19 142 / 0.15);
+  
+  --nav-bg: rgba(255, 255, 255, 0.1);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.7);
+  --nav-border: rgba(229, 231, 235, 0.2);
+  --nav-border-scrolled: rgba(229, 231, 235, 0.5);
+  
+  --scrollbar-thumb: oklch(0.62 0.17 256 / 0.3);
+  --scrollbar-track: transparent;
+  
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+.dark {
+  --background: oklch(0.12 0.015 256);
+  --foreground: oklch(0.93 0.01 256);
+  --accent-glow: oklch(0.62 0.17 256 / 0.25);
+  
+  --nav-bg: rgba(15, 23, 42, 0.1);
+  --nav-bg-scrolled: rgba(15, 23, 42, 0.7);
+  --nav-border: rgba(51, 65, 85, 0.2);
+  --nav-border-scrolled: rgba(51, 65, 85, 0.5);
+  
+  --scrollbar-thumb: oklch(0.62 0.17 256 / 0.5);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+}
+
+/* Custom WebKit scrollbar fallback */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.62 0.17 256 / 0.6);
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+/* Glassmorphism utility classes */
+.glass {
+  background: var(--color-card-light);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: var(--color-card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Top scroll progress indicator */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: scroll())) {
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    #progress-bar {
+      transform-origin: 0 50%;
+      animation: grow-progress auto linear;
+      animation-timeline: scroll();
+    }
+  }
+}
+
+/* Collapsing Header on Scroll */
+@keyframes shrink-header {
+  to {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    background-color: var(--nav-bg-scrolled);
+    border-color: var(--nav-border-scrolled);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  }
+}
+
+header.sticky-header {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+  header.sticky-header {
+    animation: shrink-header auto linear both;
+    animation-timeline: scroll(block root);
+    animation-range: 0px 100px;
+  }
+}
+
+/* Scroll reveal entry animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .scroll-reveal {
+      transition: none; /* disable transition if using scroll timeline */
+      animation: fade-in-up auto linear forwards;
+      animation-timeline: view();
+      animation-range: entry 5% entry 30%;
+    }
+  }
+}
+
+/* Subtly pulse accent glow on background */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-glow {
+  animation: glow-pulse 10s ease-in-out infinite;
+}
