@@ -23,23 +23,6 @@
 }
 
 :root {
-  --background: oklch(0.98 0.005 256);
-  --foreground: oklch(0.25 0.01 256);
-  --accent-glow: oklch(0.68 0.19 142 / 0.15);
-  
-  --nav-bg: rgba(255, 255, 255, 0.1);
-  --nav-bg-scrolled: rgba(255, 255, 255, 0.7);
-  --nav-border: rgba(229, 231, 235, 0.2);
-  --nav-border-scrolled: rgba(229, 231, 235, 0.5);
-  
-  --scrollbar-thumb: oklch(0.62 0.17 256 / 0.3);
-  --scrollbar-track: transparent;
-  
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  scrollbar-width: thin;
-}
-
-.dark {
   --background: oklch(0.12 0.015 256);
   --foreground: oklch(0.93 0.01 256);
   --accent-glow: oklch(0.62 0.17 256 / 0.25);
@@ -50,13 +33,17 @@
   --nav-border-scrolled: rgba(51, 65, 85, 0.5);
   
   --scrollbar-thumb: oklch(0.62 0.17 256 / 0.5);
+  --scrollbar-track: transparent;
+  
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-x: hidden;
 }
 
@@ -80,14 +67,9 @@ body {
 
 /* Glassmorphism utility classes */
 .glass {
-  background: var(--color-card-light);
+  background: var(--color-card-dark);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glass {
-  background: var(--color-card-dark);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 

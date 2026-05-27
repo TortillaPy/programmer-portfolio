@@ -33,32 +33,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  const theme = localStorage.getItem('theme');
-                  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (theme === 'dark' || (!theme && prefersDark)) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.style.colorScheme = 'dark';
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.style.colorScheme = 'light';
-                  }
-                } catch (e) {
-                  console.error(e);
-                }
-              })()
-            `,
-          }}
-        />
-      </head>
+    <html lang="en" className="scroll-smooth dark" style={{ colorScheme: "dark" }}>
       <body
-        className={`${inter.variable} ${outfit.variable} antialiased selection:bg-brand-500/20 selection:text-brand-700 dark:selection:text-brand-200`}
+        className={`${inter.variable} ${outfit.variable} antialiased selection:bg-brand-500/20 selection:text-brand-200`}
       >
         {children}
       </body>

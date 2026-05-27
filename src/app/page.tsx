@@ -8,13 +8,11 @@ import { EXPERIENCE } from "@/data/experience";
 import { SKILL_CATEGORIES } from "@/data/skills";
 
 // Layer Imports: Application Logic (Custom Hooks)
-import { useTheme } from "@/application/useTheme";
 import { useClipboard } from "@/application/useClipboard";
 
 // Layer Imports: Presentation (UI components & sections)
 import { GlowBackground } from "@/presentation/components/ui/GlowBackground";
 import { ProgressBar } from "@/presentation/components/ui/ProgressBar";
-import { ThemeToggle } from "@/presentation/components/ui/ThemeToggle";
 import { Hero } from "@/presentation/components/sections/Hero";
 import { RecruiterPass } from "@/presentation/components/sections/RecruiterPass";
 import { Skills } from "@/presentation/components/sections/Skills";
@@ -23,10 +21,14 @@ import { Timeline } from "@/presentation/components/sections/Timeline";
 import { Contact } from "@/presentation/components/sections/Contact";
 
 export default function Home() {
-  // Theme & Clipboard states
-  const { theme, toggleTheme, mounted } = useTheme();
+  // Mounting & Clipboard states
+  const [mounted, setMounted] = useState(false);
   const { isCopied: copiedEmail, copy: copyEmail } = useClipboard();
   const { isCopied: copiedPitch, copy: copyPitch } = useClipboard(2500);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Layout presentation states
   const [activeTab, setActiveTab] = useState<"all" | "backend">("all");
@@ -92,10 +94,10 @@ Let me know if you would like to schedule a call!`;
         (header as HTMLElement).style.height = `${newHeight}px`;
 
         if (scrolled > 10) {
-          header.classList.add("glass", "shadow-md", "border-gray-200/50", "dark:border-slate-800/50");
+          header.classList.add("glass", "shadow-md", "border-slate-800/50");
           header.classList.remove("bg-transparent", "border-transparent");
         } else {
-          header.classList.remove("glass", "shadow-md", "border-gray-200/50", "dark:border-slate-800/50");
+          header.classList.remove("glass", "shadow-md", "border-slate-800/50");
           header.classList.add("bg-transparent", "border-transparent");
         }
       }
@@ -119,7 +121,7 @@ Let me know if you would like to schedule a call!`;
   };
 
   return (
-    <div className="min-h-screen relative text-slate-800 dark:text-slate-100 font-sans selection:bg-brand-500/20">
+    <div className="min-h-screen relative text-slate-100 font-sans selection:bg-brand-500/20">
       {/* Background Glows Layer */}
       <GlowBackground />
 
@@ -136,23 +138,20 @@ Let me know if you would like to schedule a call!`;
           </span>
         </div>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
-          <a href="#about" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">About</a>
-          <a href="#recruiter-pass" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">Fast Pass</a>
-          <a href="#skills" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">Skills</a>
-          <a href="#projects" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">Projects</a>
-          <a href="#experience" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">Timeline</a>
-          <a href="#contact" className="hover:text-brand-500 dark:hover:text-brand-200 transition-colors">Contact</a>
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-350">
+          <a href="#about" className="hover:text-brand-200 transition-colors">About</a>
+          <a href="#recruiter-pass" className="hover:text-brand-200 transition-colors">Fast Pass</a>
+          <a href="#skills" className="hover:text-brand-200 transition-colors">Skills</a>
+          <a href="#projects" className="hover:text-brand-200 transition-colors">Projects</a>
+          <a href="#experience" className="hover:text-brand-200 transition-colors">Timeline</a>
+          <a href="#contact" className="hover:text-brand-200 transition-colors">Contact</a>
         </nav>
 
         <div className="flex items-center gap-4">
-          {/* Light/Dark Toggle */}
-          <ThemeToggle theme={theme} toggleTheme={toggleTheme} mounted={mounted} />
-
           {/* Quick CTA */}
           <a
             href="#contact"
-            className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold tracking-wide uppercase rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="hidden sm:inline-flex px-4 py-2 text-xs font-semibold tracking-wide uppercase rounded-xl bg-white text-slate-950 hover:bg-slate-100 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             Hire Marco
           </a>

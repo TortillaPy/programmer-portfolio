@@ -3,7 +3,7 @@
     "id": 1,
     "title": "Baby Shower Gift Registry Application",
     "category": "backend",
-    "description": "A real-time gift registry system implementing CRUD functionality for gift management and reservation.",
+    "description": "No description available.",
     "challenge": "Improving data consistency across concurrent user requests by applying state validation and controlled update logic.",
     "outcome": "Integrated Firebase for persistent data storage and authentication, enabling reliable, concurrent backend state management.",
     "tech": [
@@ -14,13 +14,13 @@
       "API Architecture"
     ],
     "demoUrl": "#",
-    "codeUrl": "https://github.com/TortillaPy"
+    "codeUrl": "https://github.com/TortillaPy/baby-shower-registry"
   },
   {
     "id": 2,
     "title": "Task Tracker CLI",
     "category": "backend",
-    "description": "A command-line task manager with full CRUD operations, status transitions, and filtered task views.",
+    "description": "No description available.",
     "challenge": "Structuring persistent local storage while ensuring runtime safety by validating inputs and handling empty datasets.",
     "outcome": "Implemented persistent local storage using native Node.js fs module, JSON serialization, strict typing, and robust error checking.",
     "tech": [
@@ -31,13 +31,13 @@
       "Git"
     ],
     "demoUrl": "#",
-    "codeUrl": "https://github.com/TortillaPy"
+    "codeUrl": "https://github.com/TortillaPy/task-tracker-cli"
   },
   {
     "id": 3,
     "title": "Algorithmic Optimization & API Challenges",
     "category": "backend",
-    "description": "Optimized complex array and string-processing challenges by applying advanced algorithmic patterns.",
+    "description": "No description available.",
     "challenge": "Solving classic logic challenges such as Trapping Rain Water, targeting O(N) efficiency and minimal auxiliary space.",
     "outcome": "Translated abstract constraints into clean, testable, and maintainable server-side logic using two-pointer techniques.",
     "tech": [
@@ -48,6 +48,6 @@
       "Complexity Optimization"
     ],
     "demoUrl": "#",
-    "codeUrl": "https://github.com/TortillaPy"
+    "codeUrl": "https://github.com/TortillaPy/algorithmic-optimization"
   }
 ]
