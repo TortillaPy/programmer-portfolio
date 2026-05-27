@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 
 // Layer Imports: Domain (Entities) & Data
-import { PROJECTS } from "@/data/projects";
+import { LOCAL_PROJECT_OVERRIDES } from "@/data/projects";
 import { EXPERIENCE } from "@/data/experience";
 import { SKILL_CATEGORIES } from "@/data/skills";
+import { Project } from "@/domain/project";
 
 // Layer Imports: Application Logic (Custom Hooks)
 import { useClipboard } from "@/application/useClipboard";
@@ -21,13 +22,114 @@ import { Timeline } from "@/presentation/components/sections/Timeline";
 import { Contact } from "@/presentation/components/sections/Contact";
 
 export default function Home() {
-  // Mounting & Clipboard states
+  // Mounting, Projects & Clipboard states
   const [mounted, setMounted] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { isCopied: copiedEmail, copy: copyEmail } = useClipboard();
   const { isCopied: copiedPitch, copy: copyPitch } = useClipboard(2500);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+interface GitHubRepo {
+  id: number;
+  name: string;
+  fork: boolean;
+  private: boolean;
+  topics?: string[];
+  description: string | null;
+  language: string | null;
+  stargazers_count: number;
+  updated_at: string;
+  homepage: string | null;
+  html_url: string;
+}
+
+  // Fetch GitHub projects dynamically on mount
+  useEffect(() => {
+    async function fetchGitHubProjects() {
+      try {
+        const username = "TortillaPy";
+        const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, {
+          headers: {
+            'User-Agent': 'programmer-portfolio-client'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`GitHub API returned status ${response.status}`);
+        }
+
+        const repos = await response.json();
+        if (Array.isArray(repos)) {
+          // Filter out forks and map to Project interface
+          const mappedProjects: Project[] = (repos as GitHubRepo[])
+            .filter((repo) => !repo.fork && !repo.private)
+            .map((repo, idx) => {
+              const name = repo.name;
+              const localOverride = LOCAL_PROJECT_OVERRIDES[name] || {};
+
+              // Map properties
+              const title = localOverride.title || name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, ' ');
+              const category = localOverride.category || (repo.topics?.includes('frontend') ? 'frontend' : repo.topics?.includes('fullstack') ? 'fullstack' : 'backend');
+              const description = repo.description || "No description available on GitHub.";
+              const challenge = localOverride.challenge || "Building and deploying robust solutions using modern tools.";
+              
+              // Dynamic outcome from repo details (e.g. language, stars, dates)
+              let dynamicOutcome = `Main language: ${repo.language || 'TypeScript'}. Starred by ${repo.stargazers_count} users.`;
+              if (repo.updated_at) {
+                dynamicOutcome += ` Last updated: ${new Date(repo.updated_at).toLocaleDateString()}.`;
+              }
+              const outcome = localOverride.outcome || dynamicOutcome;
+
+              // Tech tags: combine local overrides with github topics and language
+              const localTech = localOverride.tech || [];
+              const githubTopics = repo.topics || [];
+              const language = repo.language ? [repo.language] : [];
+              const tech = Array.from(new Set([
+                ...localTech,
+                ...githubTopics,
+                ...language
+              ])).filter(t => typeof t === 'string' && t.trim() !== '');
+
+              return {
+                id: repo.id || idx + 1,
+                title,
+                category,
+                description,
+                challenge,
+                outcome,
+                tech: tech.length > 0 ? tech : ["TypeScript", "Node.js"],
+                demoUrl: repo.homepage || "",
+                codeUrl: repo.html_url || `https://github.com/${username}/${name}`
+              };
+            });
+
+          setProjects(mappedProjects);
+        }
+      } catch (err) {
+        console.error("Failed to fetch projects from GitHub API:", err);
+        // Fallback projects map from local overrides
+        const fallbackProjects: Project[] = Object.entries(LOCAL_PROJECT_OVERRIDES).map(([name, val], idx) => ({
+          id: idx + 1,
+          title: val.title || name,
+          category: val.category || 'backend',
+          description: `Technical showcase repository for ${name}.`,
+          challenge: val.challenge,
+          outcome: val.outcome,
+          tech: val.tech || ["TypeScript", "Node.js"],
+          demoUrl: "",
+          codeUrl: `https://github.com/TortillaPy/${name}`
+        }));
+        setProjects(fallbackProjects);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGitHubProjects();
   }, []);
 
   // Layout presentation states
@@ -182,7 +284,8 @@ Let me know if you would like to schedule a call!`;
 
         {/* Feature Projects Cards */}
         <Projects
-          projects={PROJECTS}
+          projects={projects}
+          loading={loading}
           selectedTech={selectedTech}
           setSelectedTech={setSelectedTech}
           activeTab={activeTab}

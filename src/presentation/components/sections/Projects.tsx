@@ -3,6 +3,7 @@ import { Project } from "@/domain/project";
 
 interface ProjectsProps {
   projects: Project[];
+  loading?: boolean;
   selectedTech: string | null;
   setSelectedTech: (tech: string | null) => void;
   activeTab: "all" | "backend";
@@ -11,6 +12,7 @@ interface ProjectsProps {
 
 export function Projects({
   projects,
+  loading = false,
   selectedTech,
   setSelectedTech,
   activeTab,
@@ -54,107 +56,164 @@ export function Projects({
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {filteredProjects.map((project) => {
-          const matchesHighlight = selectedTech && project.tech.includes(selectedTech);
-          const hasGlobalTechFilter = selectedTech !== null;
-          
-          return (
-            <article
-              key={project.id}
-              className={`glass border rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm transition-all duration-300 ${
-                matchesHighlight
-                  ? "ring-2 ring-brand-500 border-brand-500/50 shadow-brand-500/10 shadow-lg scale-[1.01]"
-                  : hasGlobalTechFilter
-                  ? "opacity-40 grayscale-[20%]"
-                  : "border-slate-200/40 dark:border-slate-800/40"
-              }`}
-            >
-              <div>
-                {/* Header */}
-                <div className="flex justify-between items-start gap-4 mb-4">
-                  <span className="px-3 py-1 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 text-[10px] font-bold uppercase tracking-wider">
-                    {project.category}
-                  </span>
-                  
-                  <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500">
-                    {/* Demo link */}
-                    <a
-                      href={project.demoUrl}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert("Mockup Demo: Link points to a template. Live demo will be available once repository is populated.");
-                      }}
-                      className="hover:text-brand-500 transition-colors"
-                      aria-label="View demo"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                    {/* Source code link */}
-                    <a
-                      href={project.codeUrl}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        alert("Mockup Code: Source code repository will link here.");
-                      }}
-                      className="hover:text-brand-500 transition-colors"
-                      aria-label="View source code"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                      </svg>
-                    </a>
+      {loading ? (
+        /* Glowing skeleton loader */
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {[1, 2, 3, 4].map((n) => (
+            <div key={n} className="glass border border-slate-800/40 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm animate-pulse">
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div className="w-16 h-5 rounded-full bg-slate-800" />
+                  <div className="flex gap-2">
+                    <div className="w-5 h-5 rounded bg-slate-800" />
+                    <div className="w-5 h-5 rounded bg-slate-800" />
                   </div>
                 </div>
-
-                <h3 className="font-display font-bold text-xl md:text-2xl mb-3 text-slate-800 dark:text-white">
-                  {project.title}
-                </h3>
-
-                <p className="text-sm text-slate-650 dark:text-slate-300 leading-relaxed mb-6 font-light">
-                  {project.description}
-                </p>
-
-                {/* Challenge & Outcome box */}
-                <div className="p-4 rounded-2xl bg-slate-100/50 dark:bg-slate-900/40 border border-slate-200/30 dark:border-slate-800/30 space-y-3 mb-6">
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 block mb-0.5">Core Technical Challenge</span>
-                    <p className="text-xs text-slate-650 dark:text-slate-350 leading-relaxed font-light">{project.challenge}</p>
-                  </div>
-                  <div className="pt-2.5 border-t border-slate-200/40 dark:border-slate-850">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500 block mb-0.5">Quantifiable Outcome</span>
-                    <p className="text-xs text-slate-650 dark:text-slate-350 leading-relaxed font-light">{project.outcome}</p>
+                <div className="w-2/3 h-7 rounded bg-slate-800" />
+                <div className="space-y-2">
+                  <div className="w-full h-4 rounded bg-slate-800" />
+                  <div className="w-5/6 h-4 rounded bg-slate-800" />
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-900/40 border border-slate-800/30 space-y-3">
+                  <div className="w-1/3 h-3 rounded bg-slate-850" />
+                  <div className="w-3/4 h-3 rounded bg-slate-850" />
+                  <div className="pt-2.5 border-t border-slate-800/30">
+                    <div className="w-1/3 h-3 rounded bg-slate-850" />
+                    <div className="w-2/3 h-3 rounded bg-slate-850" />
                   </div>
                 </div>
               </div>
-
-              {/* Tech stack items */}
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {project.tech.map((t) => {
-                  const matchesTagFilter = selectedTech === t;
-                  return (
-                    <span
-                      key={t}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
-                        matchesTagFilter
-                          ? "bg-brand-500 border-brand-500 text-white"
-                          : "bg-slate-100/30 dark:bg-slate-900/20 border-slate-200/30 dark:border-slate-800/30 text-slate-500 dark:text-slate-400"
-                      }`}
-                    >
-                      {t}
+              <div className="flex gap-1.5 pt-6">
+                <div className="w-12 h-4 rounded bg-slate-800" />
+                <div className="w-14 h-4 rounded bg-slate-800" />
+                <div className="w-16 h-4 rounded bg-slate-800" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        /* Grid */
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {filteredProjects.map((project) => {
+            const matchesHighlight = selectedTech && project.tech.includes(selectedTech);
+            const hasGlobalTechFilter = selectedTech !== null;
+            
+            return (
+              <article
+                key={project.id}
+                className={`glass border rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm transition-all duration-300 ${
+                  matchesHighlight
+                    ? "ring-2 ring-brand-500 border-brand-500/50 shadow-brand-500/10 shadow-lg scale-[1.01]"
+                    : hasGlobalTechFilter
+                    ? "opacity-40 grayscale-[20%]"
+                    : "border-slate-200/40 dark:border-slate-800/40"
+                }`}
+              >
+                <div>
+                  {/* Header */}
+                  <div className="flex justify-between items-start gap-4 mb-4">
+                    <span className="px-3 py-1 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 text-[10px] font-bold uppercase tracking-wider">
+                      {project.category}
                     </span>
-                  );
-                })}
-              </div>
-            </article>
-          );
-        })}
-      </div>
+                    
+                    <div className="flex items-center gap-3 text-slate-400 dark:text-slate-500">
+                      {/* Demo link */}
+                      {project.demoUrl && project.demoUrl !== "#" && project.demoUrl !== "" ? (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-brand-500 transition-colors"
+                          aria-label="View demo"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => alert("Mockup Demo: Live demo will be available once repository is populated.")}
+                          className="hover:text-brand-500 transition-colors cursor-pointer opacity-50 hover:opacity-100"
+                          aria-label="View demo"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </button>
+                      )}
+                      {/* Source code link */}
+                      {project.codeUrl && project.codeUrl !== "#" && project.codeUrl !== "" ? (
+                        <a
+                          href={project.codeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-brand-500 transition-colors"
+                          aria-label="View source code"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => alert("Mockup Code: Source code repository will link here.")}
+                          className="hover:text-brand-500 transition-colors cursor-pointer opacity-50 hover:opacity-100"
+                          aria-label="View source code"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </div>
 
-      {filteredProjects.length === 0 && (
+                  <h3 className="font-display font-bold text-xl md:text-2xl mb-3 text-slate-800 dark:text-white">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-650 dark:text-slate-300 leading-relaxed mb-6 font-light">
+                    {project.description}
+                  </p>
+
+                  {/* Challenge & Outcome box */}
+                  <div className="p-4 rounded-2xl bg-slate-100/50 dark:bg-slate-900/40 border border-slate-200/30 dark:border-slate-800/30 space-y-3 mb-6">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 block mb-0.5">Core Technical Challenge</span>
+                      <p className="text-xs text-slate-650 dark:text-slate-350 leading-relaxed font-light">{project.challenge}</p>
+                    </div>
+                    <div className="pt-2.5 border-t border-slate-200/40 dark:border-slate-850">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500 block mb-0.5">Quantifiable Outcome</span>
+                      <p className="text-xs text-slate-650 dark:text-slate-350 leading-relaxed font-light">{project.outcome}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tech stack items */}
+                <div className="flex flex-wrap gap-1.5 pt-2">
+                  {project.tech.map((t) => {
+                    const matchesTagFilter = selectedTech === t;
+                    return (
+                      <span
+                        key={t}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold border transition-all ${
+                          matchesTagFilter
+                            ? "bg-brand-500 border-brand-500 text-white"
+                            : "bg-slate-100/30 dark:bg-slate-900/20 border-slate-200/30 dark:border-slate-800/30 text-slate-500 dark:text-slate-400"
+                        }`}
+                      >
+                        {t}
+                      </span>
+                    );
+                  })}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+
+      {!loading && filteredProjects.length === 0 && (
         <div className="text-center py-12 glass border border-slate-200/30 dark:border-slate-800/30 rounded-3xl">
           <p className="text-slate-500 dark:text-slate-400 text-sm">
             No projects match the selected tech tag under this category.

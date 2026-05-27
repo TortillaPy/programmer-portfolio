@@ -1,4 +1,4 @@
-import { Project } from "@/domain/project";
-import projectsGenerated from "./projects-generated.json";
+import { LOCAL_PROJECT_OVERRIDES } from "./projectOverrides";
 
-export const PROJECTS: Project[] = projectsGenerated as Project[];
+export { LOCAL_PROJECT_OVERRIDES };
+export type { LocalProjectOverride } from "./projectOverrides";
